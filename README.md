@@ -6,7 +6,7 @@ Utilities for managing media.
 Classes
 -------
 
-### ISMediaLibrary
+### ISMKDatabaseClient
 
 The following code:
 
