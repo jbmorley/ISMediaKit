@@ -11,8 +11,11 @@ Classes
 The following code:
 
 ```objc
-[mediaLibrary metaDataForTitle:@"jeeves.&.wooster.s01e01.mp4" completionBlock:^(NSDictionary *metaData) {
-    NSLog(@"%@", metaData);
+#import <ISMediaKit/ISMediaKit.h>
+
+ISMKDatabaseClient *databaseClient = [ISMKDatabaseClient sharedInstance];
+[databaseClient searchWithFilename:@"jeeves.&.wooster.s01e01.mp4" completionBlock:^(NSDictionary *media) {
+    NSLog(@"%@", media);
 }];
 ```
 
