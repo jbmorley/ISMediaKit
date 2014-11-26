@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author       = { "Jason Barrie Morley" => "jason.morley@inseven.co.uk" }
   s.source       = { :git => "https://github.com/jbmorley/ISMediaKit.git", :tag => "0.0.1" }
 
-  s.ios.deployment_target = '6.0'
+  s.ios.deployment_target = '7.0'
   s.osx.deployment_target = '10.9'
 
   s.source_files = 'ISMediaKit/*.{h,m}'
@@ -17,5 +17,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'iTVDb', "~> 0.0.4"
   s.dependency 'ILMovieDB'
+  s.dependency 'ISUtilities', "~> 1.1"
 
 end
