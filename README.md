@@ -14,6 +14,9 @@ The following code:
 #import <ISMediaKit/ISMediaKit.h>
 
 ISMKDatabaseClient *databaseClient = [ISMKDatabaseClient sharedInstance];
+[databaseClient setTVDBAPIKey:@"0123456789ABCDEF"
+                    mdbAPIKey:@"0123456789abcdef0123456789abcdef"];
+
 [databaseClient searchWithFilename:@"jeeves.&.wooster.s01e01.mp4" completionBlock:^(NSDictionary *media) {
     NSLog(@"%@", media);
 }];
