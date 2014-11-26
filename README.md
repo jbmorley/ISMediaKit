@@ -8,7 +8,7 @@ Classes
 
 ### ISMKDatabaseClient
 
-The following code:
+The database client is configured as follows:
 
 ```objc
 #import <ISMediaKit/ISMediaKit.h>
@@ -16,13 +16,17 @@ The following code:
 ISMKDatabaseClient *databaseClient = [ISMKDatabaseClient sharedInstance];
 [databaseClient setTVDBAPIKey:@"0123456789ABCDEF"
                     mdbAPIKey:@"0123456789abcdef0123456789abcdef"];
+```
 
+TV shows can be searched for using the `searchWithFilename:completionBlock:` method:
+
+```objc
 [databaseClient searchWithFilename:@"jeeves.&.wooster.s01e01.mp4" completionBlock:^(NSDictionary *media) {
     NSLog(@"%@", media);
 }];
 ```
 
-Will output:
+This will output:
 
 ```
 {
@@ -39,5 +43,25 @@ Will output:
     ShowThumbnail = "http://www.thetvdb.com/banners/posters/76934-4.jpg";
     ShowTitle = "Jeeves and Wooster";
     Type = 1;
+}
+```
+
+Movies can be searched for using the exact same method:
+
+```objc
+[databaseClient searchWithFilename:@"back to the future.mp4" completionBlock:^(NSDictionary *media) {
+    NSLog(@"%@", media);
+}];
+```
+
+This will output:
+
+```
+{
+    MovieBanner = "http://image.tmdb.org/t/p/original/x4N74cycZvKu5k3KDERJay4ajR3.jpg";
+    MovieIdentifier = 105;
+    MovieThumbnail = "http://image.tmdb.org/t/p/original/pTpxQB1N0waaSc3OSn0e9oc8kx9.jpg";
+    MovieTitle = "Back to the Future";
+    Type = 2;
 }
 ```
