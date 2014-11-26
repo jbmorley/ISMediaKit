@@ -22,5 +22,39 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ISMKTypes.h"
-#import "ISMKDatabaseClient.h"
+/**
+ * The media type.
+ */
+typedef NS_ENUM(NSUInteger, ISMKType) {
+    
+    /**
+     * Show.
+     */
+    ISMKTypeShow = 1,
+    
+    /**
+     * Movie.
+     */
+    ISMKTypeMovie = 2,
+};
+
+extern NSString *const ISMKKeyType;
+
+extern NSString *const ISMKKeyMovieIdentifier;
+extern NSString *const ISMKKeyMovieTitle;
+extern NSString *const ISMKKeyMovieThumbnail;
+extern NSString *const ISMKKeyMovieBanner;
+
+extern NSString *const ISMKKeyShowIdentifier;
+extern NSString *const ISMKKeyShowTitle;
+extern NSString *const ISMKKeyShowDescription;
+extern NSString *const ISMKKeyShowThumbnail;
+extern NSString *const ISMKKeyShowBanner;
+extern NSString *const ISMKKeyShowDate;
+
+extern NSString *const ISMKKeyEpisodeIdentifier;
+extern NSString *const ISMKKeyEpisodeTitle;
+extern NSString *const ISMKKeyEpisodeSeason;
+extern NSString *const ISMKKeyEpisodeNumber;
+extern NSString *const ISMKKeyEpisodeDescription;
+extern NSString *const ISMKKeyEpisodeThumbnail;

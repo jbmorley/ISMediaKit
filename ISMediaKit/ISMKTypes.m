@@ -23,4 +23,24 @@
 #import <Foundation/Foundation.h>
 
 #import "ISMKTypes.h"
-#import "ISMKDatabaseClient.h"
+
+NSString *const ISMKKeyType = @"Type";
+
+NSString *const ISMKKeyMovieIdentifier = @"MovieIdentifier";
+NSString *const ISMKKeyMovieTitle = @"MovieTitle";
+NSString *const ISMKKeyMovieThumbnail = @"MovieThumbnail";
+NSString *const ISMKKeyMovieBanner = @"MovieBanner";
+
+NSString *const ISMKKeyShowIdentifier = @"ShowIdentifier";
+NSString *const ISMKKeyShowTitle = @"ShowTitle";
+NSString *const ISMKKeyShowDescription = @"ShowDescription";
+NSString *const ISMKKeyShowDate = @"ShowDate";
+NSString *const ISMKKeyShowThumbnail = @"ShowThumbnail";
+NSString *const ISMKKeyShowBanner = @"ShowBanner";
+
+NSString *const ISMKKeyEpisodeIdentifier = @"EpisodeIdentifier";
+NSString *const ISMKKeyEpisodeTitle = @"EpisodeTitle";
+NSString *const ISMKKeyEpisodeDescription = @"EpisodeDescription";
+NSString *const ISMKKeyEpisodeThumbnail = @"EpisodeThumbnail";
+NSString *const ISMKKeyEpisodeSeason = @"EpisodeSeason";
+NSString *const ISMKKeyEpisodeNumber = @"EpisodeNumber";

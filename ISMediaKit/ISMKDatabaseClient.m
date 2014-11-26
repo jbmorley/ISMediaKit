@@ -24,31 +24,10 @@
 #import <ILMovieDB/ILMovieDBClient.h>
 #import <ISUtilities/ISUtilities.h>
 
-#import "ISMediaLibrary.h"
+#import "ISMKDatabaseClient.h"
 #import "ISShowParser.h"
 
-NSString *const ISMediaLibraryKeyType = @"Type";
-
-NSString *const ISMediaLibraryKeyMovieIdentifier = @"MovieIdentifier";
-NSString *const ISMediaLibraryKeyMovieTitle = @"MovieTitle";
-NSString *const ISMediaLibraryKeyMovieThumbnail = @"MovieThumbnail";
-NSString *const ISMediaLibraryKeyMovieBanner = @"MovieBanner";
-
-NSString *const ISMediaLibraryKeyShowIdentifier = @"ShowIdentifier";
-NSString *const ISMediaLibraryKeyShowTitle = @"ShowTitle";
-NSString *const ISMediaLibraryKeyShowDescription = @"ShowDescription";
-NSString *const ISMediaLibraryKeyShowDate = @"ShowDate";
-NSString *const ISMediaLibraryKeyShowThumbnail = @"ShowThumbnail";
-NSString *const ISMediaLibraryKeyShowBanner = @"ShowBanner";
-
-NSString *const ISMediaLibraryKeyEpisodeIdentifier = @"EpisodeIdentifier";
-NSString *const ISMediaLibraryKeyEpisodeTitle = @"EpisodeTitle";
-NSString *const ISMediaLibraryKeyEpisodeDescription = @"EpisodeDescription";
-NSString *const ISMediaLibraryKeyEpisodeThumbnail = @"EpisodeThumbnail";
-NSString *const ISMediaLibraryKeyEpisodeSeason = @"EpisodeSeason";
-NSString *const ISMediaLibraryKeyEpisodeNumber = @"EpisodeNumber";
-
-@interface ISMediaLibrary ()
+@interface ISMKDatabaseClient ()
 
 /**
  * Internal serial queue for performing fetches and (currently) synchronizing all properties.
@@ -105,19 +84,25 @@ NSString *const ISMediaLibraryKeyEpisodeNumber = @"EpisodeNumber";
 
 @end
 
-@implementation ISMediaLibrary
+@implementation ISMKDatabaseClient
 
 + (instancetype)sharedInstance
 {
-    static ISMediaLibrary *sharedInstance = nil;
+    static ISMKDatabaseClient *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[ISMediaLibrary alloc] initInternal];
+        sharedInstance = [[ISMKDatabaseClient alloc] initInt];
     });
     return sharedInstance;
 }
 
-- (instancetype)initInternal
+/**
+ * Internal initializer.
+ *
+ * Not exposed to force all accesses through the sharedInstance. This is required to match the API key lifecycle of both
+ * the TVDB and MDB client libraries.
+ */
+- (instancetype)initInt
 {
     self = [super init];
     if (self) {
@@ -142,28 +127,26 @@ NSString *const ISMediaLibraryKeyEpisodeNumber = @"EpisodeNumber";
     });
 }
 
-- (void)metaDataForTitle:(NSString *)title
-         completionBlock:(void (^)(NSDictionary *metaData))completionBlock
+- (void)searchWithFilename:(NSString *)filename completionBlock:(void (^)(NSDictionary *))completionBlock
 {
     dispatch_async(self.workerQueue, ^{
         ISAssert(self.hasAPIKeys, @"API keys not configured.");
         
         // Determine the media type and dispatch as appropriate.
-        if ([self.showParser parse:title]) {
+        if ([self.showParser parse:filename]) {
             [self metaDataForShow:self.showParser.show
                            season:[self.showParser.season integerValue]
                           episode:[self.showParser.episode integerValue]
                   completionBlock:completionBlock];
         } else {
-            [self metaDataForMovie:title
+            [self metaDataForMovie:[filename stringByDeletingPathExtension]
                    completionBlock:completionBlock];
         }
         
     });
 }
 
-- (void)metaDataForMovie:(NSString *)movie
-         completionBlock:(void (^)(NSDictionary *))completionBlock
+- (void)metaDataForMovie:(NSString *)movie completionBlock:(void (^)(NSDictionary *))completionBlock
 {
     [self searchForMovie:movie completionBlock:^(NSDictionary *movie) {
         
@@ -198,12 +181,12 @@ NSString *const ISMediaLibraryKeyEpisodeNumber = @"EpisodeNumber";
             
             NSMutableDictionary *results = [NSMutableDictionary dictionary];
             
-            ISSafeSetDictionaryKey(results, ISMediaLibraryKeyType, @(ISMediaLibraryTypeMovie));
+            ISSafeSetDictionaryKey(results, ISMKKeyType, @(ISMKTypeMovie));
             
-            ISSafeSetDictionaryKey(results, ISMediaLibraryKeyMovieIdentifier, mutableMovie[@"id"]);
-            ISSafeSetDictionaryKey(results, ISMediaLibraryKeyMovieTitle, mutableMovie[@"title"]);
-            ISSafeSetDictionaryKey(results, ISMediaLibraryKeyMovieThumbnail, mutableMovie[@"poster_path"]);
-            ISSafeSetDictionaryKey(results, ISMediaLibraryKeyMovieBanner, mutableMovie[@"backdrop_path"]);
+            ISSafeSetDictionaryKey(results, ISMKKeyMovieIdentifier, mutableMovie[@"id"]);
+            ISSafeSetDictionaryKey(results, ISMKKeyMovieTitle, mutableMovie[@"title"]);
+            ISSafeSetDictionaryKey(results, ISMKKeyMovieThumbnail, mutableMovie[@"poster_path"]);
+            ISSafeSetDictionaryKey(results, ISMKKeyMovieBanner, mutableMovie[@"backdrop_path"]);
             
             dispatch_async(self.completionQueue, ^{
                 completionBlock(results);
@@ -254,21 +237,21 @@ NSString *const ISMediaLibraryKeyEpisodeNumber = @"EpisodeNumber";
         
         // Copy the properties.
         
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyType, @(ISMediaLibraryTypeTVShow));
+        ISSafeSetDictionaryKey(results, ISMKKeyType, @(ISMKTypeShow));
         
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyShowIdentifier, tvdbShow.showId);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyShowTitle, tvdbShow.title);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyShowDescription, tvdbShow.description);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyShowDate, tvdbShow.premiereDate);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyShowThumbnail, tvdbShow.poster);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyShowBanner, tvdbShow.fanart);
+        ISSafeSetDictionaryKey(results, ISMKKeyShowIdentifier, tvdbShow.showId);
+        ISSafeSetDictionaryKey(results, ISMKKeyShowTitle, tvdbShow.title);
+        ISSafeSetDictionaryKey(results, ISMKKeyShowDescription, tvdbShow.description);
+        ISSafeSetDictionaryKey(results, ISMKKeyShowDate, tvdbShow.premiereDate);
+        ISSafeSetDictionaryKey(results, ISMKKeyShowThumbnail, tvdbShow.poster);
+        ISSafeSetDictionaryKey(results, ISMKKeyShowBanner, tvdbShow.fanart);
         
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyEpisodeIdentifier, tvdbEpisode.episodeId);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyEpisodeTitle, tvdbEpisode.title);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyEpisodeSeason, @(season));
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyEpisodeNumber, @(episode));
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyEpisodeDescription, tvdbEpisode.description);
-        ISSafeSetDictionaryKey(results, ISMediaLibraryKeyEpisodeThumbnail, tvdbEpisode.bannerThumbnail);
+        ISSafeSetDictionaryKey(results, ISMKKeyEpisodeIdentifier, tvdbEpisode.episodeId);
+        ISSafeSetDictionaryKey(results, ISMKKeyEpisodeTitle, tvdbEpisode.title);
+        ISSafeSetDictionaryKey(results, ISMKKeyEpisodeSeason, @(season));
+        ISSafeSetDictionaryKey(results, ISMKKeyEpisodeNumber, @(episode));
+        ISSafeSetDictionaryKey(results, ISMKKeyEpisodeDescription, tvdbEpisode.description);
+        ISSafeSetDictionaryKey(results, ISMKKeyEpisodeThumbnail, tvdbEpisode.bannerThumbnail);
         
         // Complete with the results.
         dispatch_async(self.completionQueue, ^{

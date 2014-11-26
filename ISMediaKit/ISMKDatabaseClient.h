@@ -22,45 +22,9 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- * The media type.
- */
-typedef NS_ENUM(NSUInteger, ISMediaLibraryType) {
-    
-    /**
-     * TV Show.
-     */
-    ISMediaLibraryTypeTVShow = 1,
-    
-    /**
-     * Movie.
-     */
-    ISMediaLibraryTypeMovie = 2,
-};
+#import "ISMKTypes.h"
 
-extern NSString *const ISMediaLibraryKeyType;
-
-extern NSString *const ISMediaLibraryKeyMovieIdentifier;
-extern NSString *const ISMediaLibraryKeyMovieTitle;
-extern NSString *const ISMediaLibraryKeyMovieThumbnail;
-extern NSString *const ISMediaLibraryKeyMovieBanner;
-
-extern NSString *const ISMediaLibraryKeyShowIdentifier;
-extern NSString *const ISMediaLibraryKeyShowTitle;
-extern NSString *const ISMediaLibraryKeyShowDescription;
-extern NSString *const ISMediaLibraryKeyShowThumbnail;
-extern NSString *const ISMediaLibraryKeyShowBanner;
-extern NSString *const ISMediaLibraryKeyShowDate;
-
-extern NSString *const ISMediaLibraryKeyEpisodeIdentifier;
-extern NSString *const ISMediaLibraryKeyEpisodeTitle;
-extern NSString *const ISMediaLibraryKeyEpisodeSeason;
-extern NSString *const ISMediaLibraryKeyEpisodeNumber;
-extern NSString *const ISMediaLibraryKeyEpisodeDescription;
-extern NSString *const ISMediaLibraryKeyEpisodeThumbnail;
-
-
-@interface ISMediaLibrary : NSObject
+@interface ISMKDatabaseClient : NSObject
 
 + (instancetype)new __attribute__((unavailable("new not available")));
 - (instancetype)init __attribute__((unavailable("init not available")));
@@ -68,6 +32,6 @@ extern NSString *const ISMediaLibraryKeyEpisodeThumbnail;
 + (instancetype)sharedInstance;
 
 - (void)setTVDBAPIKey:(NSString *)tvdbAPIKey mdbAPIKey:(NSString *)mdbAPIKey;
-- (void)metaDataForTitle:(NSString *)title completionBlock:(void (^)(NSDictionary *metaData))completionBlock;
+- (void)searchWithFilename:(NSString *)filename completionBlock:(void (^)(NSDictionary *media))completionBlock;
 
 @end
