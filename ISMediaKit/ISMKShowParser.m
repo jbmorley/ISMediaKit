@@ -20,9 +20,9 @@
 // SOFTWARE.
 //
 
-#import "ISShowParser.h"
+#import "ISMKShowParser.h"
 
-@interface ISShowParser () {
+@interface ISMKShowParser () {
   NSString *_show;
   NSNumber *_season;
   NSNumber *_episode;
@@ -34,7 +34,7 @@
 
 static NSString *ShowPattern = @"^(.+)\\.s(\\d{2})e(\\d{2})";
 
-@implementation ISShowParser
+@implementation ISMKShowParser
 
 - (id)init
 {

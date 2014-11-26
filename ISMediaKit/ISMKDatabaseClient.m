@@ -25,7 +25,7 @@
 #import <ISUtilities/ISUtilities.h>
 
 #import "ISMKDatabaseClient.h"
-#import "ISShowParser.h"
+#import "ISMKShowParser.h"
 
 @interface ISMKDatabaseClient ()
 
@@ -47,7 +47,7 @@
 /**
  * Synchronized on workerQueue.
  */
-@property (nonatomic, readonly, strong) ISShowParser *showParser;
+@property (nonatomic, readonly, strong) ISMKShowParser *showParser;
 
 /**
  * Synchronized on workerQueue.
@@ -109,7 +109,7 @@
         _workerQueue = ISDispatchQueueCreate(@"uk.co.inseven", self, @"workerQueue", DISPATCH_QUEUE_SERIAL);
         _completionQueue = ISDispatchQueueCreate(@"uk.co.inseven", self, @"completionQueue", DISPATCH_QUEUE_CONCURRENT);
         _showCache = [NSMutableDictionary dictionary];
-        _showParser = [ISShowParser new];
+        _showParser = [ISMKShowParser new];
         _movieConfiguration = nil;
         _movieConfigurationCompletionBlocks = [NSMutableArray array];
         _fetchingMovieConfiguration = NO;
