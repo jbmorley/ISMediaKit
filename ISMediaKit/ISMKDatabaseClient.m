@@ -82,6 +82,8 @@
  */
 @property (nonatomic, readwrite, assign) BOOL fetchingMovieConfiguration;
 
+@property (nonatomic, readonly, strong) ILMovieDBClient *mdbClient;
+
 @end
 
 @implementation ISMKDatabaseClient
@@ -114,6 +116,8 @@
         _movieConfigurationCompletionBlocks = [NSMutableArray array];
         _fetchingMovieConfiguration = NO;
         _hasAPIKeys = NO;
+        _mdbClient = [ILMovieDBClient sharedClient];
+        _mdbClient.completionQueue = _completionQueue;
     }
     return self;
 }
@@ -132,14 +136,16 @@
     dispatch_async(self.workerQueue, ^{
         ISAssert(self.hasAPIKeys, @"API keys not configured.");
         
+        NSString *name = [[filename lastPathComponent] stringByDeletingPathExtension];
+        
         // Determine the media type and dispatch as appropriate.
-        if ([self.showParser parse:filename]) {
+        if ([self.showParser parse:name]) {
             [self metaDataForShow:self.showParser.show
                            season:[self.showParser.season integerValue]
                           episode:[self.showParser.episode integerValue]
                   completionBlock:completionBlock];
         } else {
-            [self metaDataForMovie:[filename stringByDeletingPathExtension]
+            [self metaDataForMovie:name
                    completionBlock:completionBlock];
         }
         
@@ -176,8 +182,6 @@
                 }
                 
             }
-            
-            NSLog(@"Movie: %@", mutableMovie);
             
             NSMutableDictionary *results = [NSMutableDictionary dictionary];
             
@@ -317,8 +321,7 @@
         self.fetchingMovieConfiguration = YES;
 
         // Fetch the configuration.
-        ILMovieDBClient *client = [ILMovieDBClient sharedClient];
-        [client GET:kILMovieDBConfiguration parameters:nil block:^(id responseObject, NSError *error) {
+        [self.mdbClient GET:kILMovieDBConfiguration parameters:nil block:^(id responseObject, NSError *error) {
             dispatch_async(self.workerQueue, ^{
                 
                 if (error == nil && responseObject) {
@@ -345,8 +348,8 @@
 {
     dispatch_async(self.workerQueue, ^{
 
-        ILMovieDBClient *client = [ILMovieDBClient sharedClient];
-        [client GET:kILMovieDBSearchMovie parameters:@{@"query": movie} block:^(id responseObject, NSError *error) {
+        [self.mdbClient GET:kILMovieDBSearchMovie parameters:@{@"query": movie} block:^(id responseObject,
+                                                                                        NSError *error) {
             
             // Complete with nil as we were unable to find the movie.
             if (error) {
