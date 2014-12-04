@@ -87,4 +87,21 @@
     XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @1);
 }
 
+- (void)testJeevesAndWooster
+{
+    NSDictionary *media = nil;
+    
+    media = [self searchForFilename:@"jeeves.&.wooster.s01e03.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
+    
+    media = [self searchForFilename:@"jeeves.and.wooster.s01e03.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
+}
+
 @end
