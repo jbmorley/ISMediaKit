@@ -211,6 +211,13 @@
         
         // Find the TVDbEpisode.
         TVDbShow *tvdbShow = [self tvdbShowForTitle:show];
+        if (tvdbShow == nil) {
+            dispatch_async(self.completionQueue, ^{
+                completionBlock(nil);
+            });
+            return;
+        }
+        
         TVDbEpisode *tvdbEpisode = nil;
         for (TVDbEpisode *e in tvdbShow.episodes) {
             if ([e.seasonNumber integerValue] == season &&

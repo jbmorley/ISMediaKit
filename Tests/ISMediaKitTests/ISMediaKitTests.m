@@ -78,6 +78,12 @@
     return result;
 }
 
+- (void)testFailedSearchReturnsNil
+{
+    NSDictionary *media = [self searchForFilename:@"a.show.that.should.never.exist.s03e01.m4v"];
+    XCTAssertNil(media);
+}
+
 - (void)testArrowS01E01
 {
     NSDictionary *media = [self searchForFilename:@"arrow.s01e01.m4v"];
@@ -102,6 +108,25 @@
     XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
     XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
+}
+
+- (void)testMarvelsAgentsOfSHIELD
+{
+    NSDictionary *media = nil;
+    
+    media = [self searchForFilename:@"marvels.agents.of.s.h.i.e.l.d.s02e09.mp4"];
+    NSLog(@"Media: %@", media);
+//    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
+//    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
+//    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
+//    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
+//    
+//    media = [self searchForFilename:@"jeeves.and.wooster.s01e03.m4v"];
+//    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
+//    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
+//    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
+//    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
+    
 }
 
 @end
