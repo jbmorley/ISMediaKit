@@ -184,9 +184,6 @@
         // Determine the media type and dispatch as appropriate.
         if ([self.showParser parse:name]) {
             NSString *title = [ISMKDatabaseClient titleForFilenameFormatedTitle:self.showParser.show];
-            
-            NSLog(@"Search: %@", title);
-            
             [self metaDataForShow:title
                            season:[self.showParser.season integerValue]
                           episode:[self.showParser.episode integerValue]
