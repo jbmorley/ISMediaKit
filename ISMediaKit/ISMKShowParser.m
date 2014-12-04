@@ -40,7 +40,9 @@ static NSString *ShowPattern = @"^(.+)\\.s(\\d{2})e(\\d{2})";
 {
   self = [super init];
   if (self) {
-    self.regex = [NSRegularExpression regularExpressionWithPattern:ShowPattern options:NSRegularExpressionCaseInsensitive error:nil];
+    self.regex = [NSRegularExpression regularExpressionWithPattern:ShowPattern
+                                                           options:NSRegularExpressionCaseInsensitive
+                                                             error:nil];
   }
   return self;
 }
@@ -50,15 +52,14 @@ static NSString *ShowPattern = @"^(.+)\\.s(\\d{2})e(\\d{2})";
 {
   if ([self.regex numberOfMatchesInString:string options:0 range:NSMakeRange(0, string.length)] > 0) {
     
-    NSTextCheckingResult *textCheckingResult = [self.regex firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
+    NSTextCheckingResult *textCheckingResult = [self.regex firstMatchInString:string options:0
+                                                                        range:NSMakeRange(0, string.length)];
     NSRange matchRange;
     NSString *match;
     
     // Show.
     matchRange = [textCheckingResult rangeAtIndex:1];
-    match = [string substringWithRange:matchRange];
-    _show = [match stringByReplacingOccurrencesOfString:@"." withString:@" "];
-    _show = [self.show capitalizedString];
+    _show = [string substringWithRange:matchRange];
     
     // Season.
     matchRange = [textCheckingResult rangeAtIndex:2];

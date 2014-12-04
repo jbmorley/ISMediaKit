@@ -88,6 +88,49 @@
 
 @implementation ISMKDatabaseClient
 
++ (NSString *)titleForFilenameFormatedTitle:(NSString *)filenameFormatedTitle
+{
+    NSArray *components = [filenameFormatedTitle componentsSeparatedByString:@"."];
+    
+    enum {
+        StateScanning,
+        StateSingleCharacter,
+    };
+    
+    NSMutableArray *words = [NSMutableArray array];
+    
+    __block int state = StateScanning;
+    __block NSMutableString *word = nil;
+    
+    [components enumerateObjectsUsingBlock:^(NSString *component, NSUInteger idx, BOOL *stop) {
+        
+        if (state == StateScanning) {
+            
+            word = [component mutableCopy];
+            [words addObject:word];
+            
+            if ([component length] == 1) {
+                state = StateSingleCharacter;
+            }
+            
+        } else if (state == StateSingleCharacter) {
+            
+            if ([component length] == 1) {
+                [word appendString:component];
+            } else {
+                word = [component mutableCopy];
+                [words addObject:word];
+                
+                state = StateScanning;
+            }
+            
+        }
+        
+    }];
+    
+    return [words componentsJoinedByString:@" "];
+}
+
 + (instancetype)sharedInstance
 {
     static ISMKDatabaseClient *sharedInstance = nil;
@@ -140,11 +183,16 @@
         
         // Determine the media type and dispatch as appropriate.
         if ([self.showParser parse:name]) {
-            [self metaDataForShow:self.showParser.show
+            NSString *title = [ISMKDatabaseClient titleForFilenameFormatedTitle:self.showParser.show];
+            
+            NSLog(@"Search: %@", title);
+            
+            [self metaDataForShow:title
                            season:[self.showParser.season integerValue]
                           episode:[self.showParser.episode integerValue]
                   completionBlock:completionBlock];
         } else {
+            name = [ISMKDatabaseClient titleForFilenameFormatedTitle:name];
             [self metaDataForMovie:name
                    completionBlock:completionBlock];
         }
@@ -208,8 +256,6 @@
         completionBlock:(void (^)(NSDictionary *metaData))completionBlock
 {
     dispatch_async(self.workerQueue, ^{
-        
-        // TODO Correct the title to account for S.H.I.E.L.D
         
         // Find the TVDbEpisode.
         TVDbShow *tvdbShow = [self tvdbShowForTitle:show];

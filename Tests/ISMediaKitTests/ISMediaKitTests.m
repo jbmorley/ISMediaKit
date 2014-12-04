@@ -112,8 +112,13 @@
 
 - (void)testMarvelsAgentsOfSHIELD
 {
-    NSDictionary *media = nil;    
+    NSDictionary *media = nil;
     media = [self searchForFilename:@"marvels.agents.of.s.h.i.e.l.d.s02e09.mp4"];
+    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Marvel's Agents of S.H.I.E.L.D.");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"...Ye Who Enter Here");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @2);
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @9);
+    
     NSLog(@"Media: %@", media);
 }
 
