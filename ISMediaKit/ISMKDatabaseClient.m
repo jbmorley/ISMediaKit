@@ -209,6 +209,8 @@
 {
     dispatch_async(self.workerQueue, ^{
         
+        // TODO Correct the title to account for S.H.I.E.L.D
+        
         // Find the TVDbEpisode.
         TVDbShow *tvdbShow = [self tvdbShowForTitle:show];
         if (tvdbShow == nil) {
