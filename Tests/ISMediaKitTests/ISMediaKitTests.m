@@ -87,6 +87,7 @@
 - (void)testArrowS01E01
 {
     NSDictionary *media = [self searchForFilename:@"arrow.s01e01.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
     XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Arrow");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"Pilot");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
@@ -98,12 +99,14 @@
     NSDictionary *media = nil;
     
     media = [self searchForFilename:@"jeeves.&.wooster.s01e03.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
     XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
     XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
     
     media = [self searchForFilename:@"jeeves.and.wooster.s01e03.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
     XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
@@ -112,14 +115,32 @@
 
 - (void)testMarvelsAgentsOfSHIELD
 {
-    NSDictionary *media = nil;
-    media = [self searchForFilename:@"marvels.agents.of.s.h.i.e.l.d.s02e09.mp4"];
+    NSDictionary *media = [self searchForFilename:@"marvels.agents.of.s.h.i.e.l.d.s02e09.mp4"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
     XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Marvel's Agents of S.H.I.E.L.D.");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"...Ye Who Enter Here");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"…Ye Who Enter Here");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @2);
     XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @9);
-    
-    NSLog(@"Media: %@", media);
+}
+
+- (void)testBackToTheFuture
+{
+    NSDictionary *media = [self searchForFilename:@"Back to the Future.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
+    XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"Back to the Future");
+}
+
+- (void)testLadyHawkeNotFound
+{
+    NSDictionary *media = [self searchForFilename:@"Lady Hawke.m4v"];
+    XCTAssertNil(media);
+}
+
+- (void)testLadyHawke
+{
+    NSDictionary *media = [self searchForFilename:@"Ladyhawke.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
+    XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"Ladyhawke");
 }
 
 @end

@@ -167,16 +167,31 @@
 
 - (void)setTVDBAPIKey:(NSString *)tvdbAPIKey mdbAPIKey:(NSString *)mdbAPIKey
 {
+    __weak ISMKDatabaseClient *weakSelf = self;
     dispatch_async(self.workerQueue, ^{
+        
+        ISMKDatabaseClient *self = weakSelf;
+        if (self == nil) {
+            return;
+        }
+        
         self.hasAPIKeys = YES;
         [[TVDbClient sharedInstance] setApiKey:tvdbAPIKey];
         [[ILMovieDBClient sharedClient] setApiKey:mdbAPIKey];
+        
     });
 }
 
 - (void)searchWithFilename:(NSString *)filename completionBlock:(void (^)(NSDictionary *))completionBlock
 {
+    __weak ISMKDatabaseClient *weakSelf = self;
     dispatch_async(self.workerQueue, ^{
+        
+        ISMKDatabaseClient *self = weakSelf;
+        if (self == nil) {
+            return;
+        }
+        
         ISAssert(self.hasAPIKeys, @"API keys not configured.");
         
         NSString *name = [[filename lastPathComponent] stringByDeletingPathExtension];
@@ -199,7 +214,13 @@
 
 - (void)metaDataForMovie:(NSString *)movie completionBlock:(void (^)(NSDictionary *))completionBlock
 {
+    __weak ISMKDatabaseClient *weakSelf = self;
     [self searchForMovie:movie completionBlock:^(NSDictionary *movie) {
+        
+        ISMKDatabaseClient *self = weakSelf;
+        if (self == nil) {
+            return;
+        }
         
         if (movie == nil) {
             dispatch_async(self.completionQueue, ^{
@@ -252,7 +273,13 @@
                 episode:(NSUInteger)episode
         completionBlock:(void (^)(NSDictionary *metaData))completionBlock
 {
+    __weak ISMKDatabaseClient *weakSelf = self;
     dispatch_async(self.workerQueue, ^{
+        
+        ISMKDatabaseClient *self = weakSelf;
+        if (self == nil) {
+            return;
+        }
         
         // Find the TVDbEpisode.
         TVDbShow *tvdbShow = [self tvdbShowForTitle:show];
@@ -352,7 +379,13 @@
 
 - (void)mdbConfigurationWithCompletionBlock:(void (^)(id configuration))completionBlock
 {
+    __weak ISMKDatabaseClient *weakSelf = self;
     dispatch_async(self.workerQueue, ^{
+        
+        ISMKDatabaseClient *self = weakSelf;
+        if (self == nil) {
+            return;
+        }
         
         // Return the configuration if we have one.
         if (self.movieConfiguration) {
@@ -398,10 +431,22 @@
 
 - (void)searchForMovie:(NSString *)movie completionBlock:(void (^)(NSDictionary *movie))completionBlock
 {
+    __weak ISMKDatabaseClient *weakSelf = self;
     dispatch_async(self.workerQueue, ^{
+        
+        ISMKDatabaseClient *self = weakSelf;
+        if (self == nil) {
+            return;
+        }
 
+        __weak ISMKDatabaseClient *weakSelf = self;
         [self.mdbClient GET:kILMovieDBSearchMovie parameters:@{@"query": movie} block:^(id responseObject,
                                                                                         NSError *error) {
+            
+            ISMKDatabaseClient *self = weakSelf;
+            if (self == nil) {
+                return;
+            }
             
             // Complete with nil as we were unable to find the movie.
             if (error) {
@@ -416,6 +461,10 @@
                 if (results && results.count > 0) {
                     dispatch_async(self.completionQueue, ^{
                         completionBlock(results[0]);
+                    });
+                } else {
+                    dispatch_async(self.completionQueue, ^{
+                        completionBlock(nil);
                     });
                 }
             }
