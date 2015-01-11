@@ -118,7 +118,7 @@
     NSDictionary *media = [self searchForFilename:@"marvels.agents.of.s.h.i.e.l.d.s02e09.mp4"];
     XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
     XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Marvel's Agents of S.H.I.E.L.D.");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"…Ye Who Enter Here");
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"...Ye Who Enter Here");
     XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @2);
     XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @9);
 }
