@@ -28,6 +28,7 @@ NSString *const ISMKKeyType = @"Type";
 
 NSString *const ISMKKeyMovieIdentifier = @"MovieIdentifier";
 NSString *const ISMKKeyMovieTitle = @"MovieTitle";
+NSString *const ISMKKeyMovieDate = @"MovieDate";
 NSString *const ISMKKeyMovieThumbnail = @"MovieThumbnail";
 NSString *const ISMKKeyMovieBanner = @"MovieBanner";
 

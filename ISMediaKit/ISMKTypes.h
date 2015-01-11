@@ -42,6 +42,7 @@ extern NSString *const ISMKKeyType;
 
 extern NSString *const ISMKKeyMovieIdentifier;
 extern NSString *const ISMKKeyMovieTitle;
+extern NSString *const ISMKKeyMovieDate;
 extern NSString *const ISMKKeyMovieThumbnail;
 extern NSString *const ISMKKeyMovieBanner;
 

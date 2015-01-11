@@ -258,6 +258,14 @@
             ISSafeSetDictionaryKey(results, ISMKKeyMovieThumbnail, mutableMovie[@"poster_path"]);
             ISSafeSetDictionaryKey(results, ISMKKeyMovieBanner, mutableMovie[@"backdrop_path"]);
             
+            // Decode the release date.
+            NSString *releaseDate = mutableMovie[@"release_date"];
+            if (releaseDate) {
+                NSDateFormatter *format = [[NSDateFormatter alloc] init];
+                [format setDateFormat:@"yyyy-MM-dd"];
+                results[ISMKKeyMovieDate] = [format dateFromString:releaseDate];
+            }
+            
             dispatch_async(self.completionQueue, ^{
                 completionBlock(results);
             });
