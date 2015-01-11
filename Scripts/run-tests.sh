@@ -9,5 +9,5 @@ tests=ISMediaKitTests
 
 pushd "$root_directory/Tests"
 pod update
-xcodebuild -workspace "$tests.xcworkspace" -scheme "$tests" clean test
+xcodebuild -workspace "$tests.xcworkspace" -scheme "$tests" clean test | xcpretty -c
 popd
