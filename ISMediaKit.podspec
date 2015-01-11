@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.dependency 'iTVDb', "~> 0.0.4"
+  s.dependency 'iTVDb', "~> 0.0.5"
   s.dependency 'ILMovieDB'
   s.dependency 'ISUtilities', "~> 1.1"
 
