@@ -3,6 +3,8 @@ ISMediaKit
 
 Utilities for managing media.
 
+[![Build Status](https://travis-ci.org/jbmorley/ISMediaKit.svg)](https://travis-ci.org/jbmorley/ISMediaKit)
+
 Classes
 -------
 
