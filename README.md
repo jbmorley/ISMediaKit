@@ -65,3 +65,11 @@ This will output:
     Type = 2;
 }
 ```
+
+Thanks
+------
+
+Many thanks to:
+
+- [Gustavo Leguizamon](https://github.com/goopi) for [ILMovieDB](https://github.com/WatchApp/ILMovieDB)
+- [Kevin Tuhumury](https://github.com/kevintuhumury) for [iTVDb](https://github.com/kevintuhumury/itvdb)
