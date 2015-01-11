@@ -69,7 +69,7 @@ This will output:
 License
 -------
 
-ISMediaKit is available under the MIT license. See the LICENSE file for more info.
+ISMediaKit is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
 
 Thanks
 ------
