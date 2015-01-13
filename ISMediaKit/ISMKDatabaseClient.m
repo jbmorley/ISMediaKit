@@ -262,17 +262,62 @@
                   completionBlock:completionBlock];
         } else {
             name = [ISMKDatabaseClient titleForFilenameFormatedTitle:name];
-            [self metaDataForMovie:name
-                   completionBlock:completionBlock];
+
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(.+?)( ((\\d{4})|\\((\\d{4})\\)))?$"
+                                                                                   options:NSRegularExpressionCaseInsensitive
+                                                                                     error:nil];
+            if ([regex numberOfMatchesInString:name options:0 range:NSMakeRange(0, name.length)] > 0) {
+                
+                NSTextCheckingResult *textCheckingResult = [regex firstMatchInString:name
+                                                                             options:0
+                                                                               range:NSMakeRange(0, name.length)];
+                
+                NSLog(@"Number of ranges: %ld", [textCheckingResult numberOfRanges]);
+                NSRange matchRange;
+                
+                // Title.
+                matchRange = [textCheckingResult rangeAtIndex:1];
+                NSString *title = [name substringWithRange:matchRange];
+                
+                // Year.
+                NSInteger releaseYear = ISMediaKitUnknown;
+                
+                matchRange = [textCheckingResult rangeAtIndex:4];
+                if (matchRange.location != NSNotFound) {
+                    NSString *year = [name substringWithRange:matchRange];
+                    releaseYear = [year integerValue];
+                }
+                
+                matchRange = [textCheckingResult rangeAtIndex:5];
+                if (matchRange.location != NSNotFound) {
+                    NSString *year = [name substringWithRange:matchRange];
+                    releaseYear = [year integerValue];
+                }
+                
+                [self metaDataForMovie:title
+                           releaseYear:releaseYear
+                       completionBlock:completionBlock];
+
+            } else {
+                
+                dispatch_async(self.completionQueue, ^{
+                    completionBlock(nil);
+                });
+                
+            }
+            
+            
         }
         
     });
 }
 
-- (void)metaDataForMovie:(NSString *)movie completionBlock:(void (^)(NSDictionary *))completionBlock
+- (void)metaDataForMovie:(NSString *)movie
+             releaseYear:(NSInteger)releaseYear
+         completionBlock:(void (^)(NSDictionary *))completionBlock
 {
     __weak ISMKDatabaseClient *weakSelf = self;
-    [self searchForMovie:movie completionBlock:^(NSDictionary *movie) {
+    [self searchForMovie:movie releaseYear:releaseYear completionBlock:^(NSDictionary *movie) {
         
         ISMKDatabaseClient *self = weakSelf;
         if (self == nil) {
@@ -494,7 +539,9 @@
     });
 }
 
-- (void)searchForMovie:(NSString *)movie completionBlock:(void (^)(NSDictionary *movie))completionBlock
+- (void)searchForMovie:(NSString *)movie
+           releaseYear:(NSInteger)releaseYear
+       completionBlock:(void (^)(NSDictionary *movie))completionBlock
 {
     __weak ISMKDatabaseClient *weakSelf = self;
     dispatch_async(self.workerQueue, ^{
@@ -521,18 +568,48 @@
                 return;
             }
             
+            NSDictionary *result = nil;
+            
             if (responseObject) {
+                
                 NSArray *results = responseObject[@"results"];
                 if (results && results.count > 0) {
-                    dispatch_async(self.completionQueue, ^{
-                        completionBlock(results[0]);
-                    });
-                } else {
-                    dispatch_async(self.completionQueue, ^{
-                        completionBlock(nil);
-                    });
+                    
+                    // Check the release year if one has been specified.
+
+                    if (releaseYear == ISMediaKitUnknown) {
+                        
+                        result = results[0];
+                        
+                    } else {
+                        
+                        for (int i = 0; i < [results count]; i++) {
+                            
+                            // Decode the release date.
+                            NSString *releaseDate = results[i][@"release_date"];
+                            if (releaseDate) {
+                                NSDateFormatter *format = [[NSDateFormatter alloc] init];
+                                [format setDateFormat:@"yyyy-MM-dd"];
+                                NSDate *date = [format dateFromString:releaseDate];
+                                NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitYear fromDate:date];
+                                NSInteger year = [components year];
+                                if (year == releaseYear) {
+                                    result = results[i];
+                                    break;
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                
                 }
             }
+            
+            dispatch_async(self.completionQueue, ^{
+                completionBlock(result);
+            });
             
         }];
         

@@ -26,6 +26,10 @@
 
 NSInteger ISYearFromDate(NSDate *date)
 {
+    if (date == nil) {
+        return ISMediaKitUnknown;
+    }
+    
     NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitYear fromDate:date];
     return [components year];
 }
@@ -135,9 +139,26 @@ NSInteger ISYearFromDate(NSDate *date)
 - (void)testNewRoboCop
 {
     NSDictionary *media = [self searchForFilename:@"Robocop.m4v"];
+    XCTAssertNotNil(media);
     XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
     XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"RoboCop");
     XCTAssertEqual(ISYearFromDate(media[ISMKKeyMovieDate]), 2014);
+}
+
+- (void)testOriginalRoboCop
+{
+    NSDictionary *media = [self searchForFilename:@"Robocop 1987.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
+    XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"RoboCop");
+    XCTAssertEqual(ISYearFromDate(media[ISMKKeyMovieDate]), 1987);
+}
+
+- (void)testOriginalRoboCopParentheses
+{
+    NSDictionary *media = [self searchForFilename:@"Robocop (1987).m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
+    XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"RoboCop");
+    XCTAssertEqual(ISYearFromDate(media[ISMKKeyMovieDate]), 1987);
 }
 
 @end

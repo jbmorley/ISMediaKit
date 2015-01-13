@@ -37,3 +37,5 @@ typedef NS_ENUM(NSUInteger, ISMediaKitErrorCode) {
 };
 
 extern NSString *const ISMediaKitFailureReasonErrorKey;
+
+extern const NSInteger ISMediaKitUnknown;

@@ -25,3 +25,5 @@
 NSString *const ISMediaKitErrorDomain = @"ISMediaKitErrorDomain";
 
 NSString *const ISMediaKitFailureReasonErrorKey = @"ISMediaKikFailureReasonErrorKey";
+
+const NSInteger ISMediaKitUnknown = -1;
