@@ -41,15 +41,12 @@ NSInteger ISYearFromDate(NSDate *date)
 - (void)setUp
 {
     [super setUp];
+    
     self.client = [ISMKDatabaseClient sharedInstance];
     XCTAssertNotNil(self.client, @"Unable to get the shared client instance");
     
-    NSString *configurationPath = [@"~/.add-to-itunes.plist" stringByExpandingTildeInPath];
-    NSError *error = nil;
-    BOOL success = [self.client configureWithFileAtPath:configurationPath error:&error];
-    
-    XCTAssert(success);
-    
+    [self.client setTVDBAPIKey:@"C798710FFA249698"
+                     mdbAPIKey:@"c39bbdd3113e0716a66d0f64534d2ff6"];
 }
 
 - (void)tearDown
