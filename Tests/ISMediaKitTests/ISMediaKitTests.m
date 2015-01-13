@@ -45,6 +45,7 @@ NSInteger ISYearFromDate(NSDate *date)
     self.client = [ISMKDatabaseClient sharedInstance];
     XCTAssertNotNil(self.client, @"Unable to get the shared client instance");
     
+    // These keys are for testing purposes only. Please do not use them in your own applications.
     [self.client setTVDBAPIKey:@"C798710FFA249698"
                      mdbAPIKey:@"c39bbdd3113e0716a66d0f64534d2ff6"];
 }
