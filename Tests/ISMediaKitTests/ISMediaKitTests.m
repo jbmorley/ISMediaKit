@@ -38,40 +38,6 @@ NSInteger ISYearFromDate(NSDate *date)
 
 @implementation ISMediaKitTests
 
-- (void)configureDatabaseClient:(NSString *)path
-{
-    // TODO Movie this into a loadConfiguration: call.
-    
-    // Check the configuration exists.
-    NSString *configurationPath = [path stringByExpandingTildeInPath];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:configurationPath]) {
-        XCTFail(@"Configuration file not found at '%@'.\n", configurationPath);
-    }
-    
-    // Load the configuration.
-    NSDictionary *configuration = [NSDictionary dictionaryWithContentsOfFile:configurationPath];
-    if (configuration == nil) {
-        XCTFail(@"Unable to load configuration file at '%@'.\n", configurationPath);
-    }
-    
-    // Check the tvdb-api-key exists.
-    NSString *tvdbAPIKey = configuration[@"tvdb-api-key"];
-    if (tvdbAPIKey == nil) {
-        XCTFail(@"Unable to find 'tvdb-api-key' in the configuration file.\n");
-    }
-    
-    // Check the mdb-api-key exists.
-    NSString *mdbAPIKey = configuration[@"mdb-api-key"];
-    if (mdbAPIKey == nil) {
-        XCTFail(@"Unable to find 'mdb-api-key' in the configuration file.\n");
-    }
-
-    // Configure the client.
-    [self.client setTVDBAPIKey:tvdbAPIKey
-                     mdbAPIKey:mdbAPIKey];
-}
-
 - (void)setUp
 {
     [super setUp];
