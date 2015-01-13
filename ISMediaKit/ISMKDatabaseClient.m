@@ -189,7 +189,7 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:path]) {
         if (error) {
-            NSString *reason = [NSString stringWithFormat:@"Configuration file not found at '%@'", path];
+            NSString *reason = [NSString stringWithFormat:@"Configuration file not found at '%@'.", path];
             *error = [NSError errorWithDomain:ISMediaKitErrorDomain
                                          code:ISMediaKitErrorFileNotFound
                                      userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
@@ -201,7 +201,7 @@
     NSDictionary *configuration = [NSDictionary dictionaryWithContentsOfFile:path];
     if (configuration == nil) {
         if (error) {
-            NSString *reason = [NSString stringWithFormat:@"Unable to load configuration file at '%@'", path];
+            NSString *reason = [NSString stringWithFormat:@"Unable to load configuration file at '%@'.", path];
             *error = [NSError errorWithDomain:ISMediaKitErrorDomain
                                          code:ISMediaKitErrorInvalidConfigurationFile
                                      userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
@@ -213,7 +213,7 @@
     NSString *tvdbAPIKey = configuration[@"tvdb-api-key"];
     if (tvdbAPIKey == nil) {
         if (error) {
-            NSString *reason = @"Unable to find 'tvdb-api-key' in the configuration file";
+            NSString *reason = @"Unable to find 'tvdb-api-key' in the configuration file.";
             *error = [NSError errorWithDomain:ISMediaKitErrorDomain
                                          code:ISMediaKitErrorMissingKey
                                      userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
@@ -225,7 +225,7 @@
     NSString *mdbAPIKey = configuration[@"mdb-api-key"];
     if (mdbAPIKey == nil) {
         if (error) {
-            NSString *reason = @"Unable to find 'mdb-api-key' in the configuration file";
+            NSString *reason = @"Unable to find 'mdb-api-key' in the configuration file.";
             *error = [NSError errorWithDomain:ISMediaKitErrorDomain
                                          code:ISMediaKitErrorMissingKey
                                      userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
