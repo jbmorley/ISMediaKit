@@ -26,6 +26,7 @@
 
 #import "ISMKDatabaseClient.h"
 #import "ISMKShowParser.h"
+#import "ISMediaKit.h"
 
 @interface ISMKDatabaseClient ()
 
@@ -180,6 +181,62 @@
         [[ILMovieDBClient sharedClient] setApiKey:mdbAPIKey];
         
     });
+}
+
+- (BOOL)configureWithFileAtPath:(NSString *)path error:(NSError **)error
+{
+    // Check the configuration exists.
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:path]) {
+        if (error) {
+            NSString *reason = [NSString stringWithFormat:@"Configuration file not found at '%@'", path];
+            *error = [NSError errorWithDomain:ISMediaKitErrorDomain
+                                         code:ISMediaKitErrorFileNotFound
+                                     userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
+            return NO;
+        }
+    }
+    
+    // Load the configuration.
+    NSDictionary *configuration = [NSDictionary dictionaryWithContentsOfFile:path];
+    if (configuration == nil) {
+        if (error) {
+            NSString *reason = [NSString stringWithFormat:@"Unable to load configuration file at '%@'", path];
+            *error = [NSError errorWithDomain:ISMediaKitErrorDomain
+                                         code:ISMediaKitErrorInvalidConfigurationFile
+                                     userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
+            return NO;
+        }
+    }
+    
+    // Check the tvdb-api-key exists.
+    NSString *tvdbAPIKey = configuration[@"tvdb-api-key"];
+    if (tvdbAPIKey == nil) {
+        if (error) {
+            NSString *reason = @"Unable to find 'tvdb-api-key' in the configuration file";
+            *error = [NSError errorWithDomain:ISMediaKitErrorDomain
+                                         code:ISMediaKitErrorMissingKey
+                                     userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
+            return NO;
+        }
+    }
+    
+    // Check the mdb-api-key exists.
+    NSString *mdbAPIKey = configuration[@"mdb-api-key"];
+    if (mdbAPIKey == nil) {
+        if (error) {
+            NSString *reason = @"Unable to find 'mdb-api-key' in the configuration file";
+            *error = [NSError errorWithDomain:ISMediaKitErrorDomain
+                                         code:ISMediaKitErrorMissingKey
+                                     userInfo:@{ISMediaKitFailureReasonErrorKey: reason}];
+            return NO;
+        }
+    }
+    
+    // Configure the client.
+    [self setTVDBAPIKey:tvdbAPIKey mdbAPIKey:mdbAPIKey];
+    
+    return YES;
 }
 
 - (void)searchWithFilename:(NSString *)filename completionBlock:(void (^)(NSDictionary *))completionBlock

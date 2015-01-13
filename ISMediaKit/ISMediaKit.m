@@ -20,19 +20,8 @@
 // SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+#import "ISMediaKit.h"
 
-#import "ISMKTypes.h"
+NSString *const ISMediaKitErrorDomain = @"ISMediaKitErrorDomain";
 
-@interface ISMKDatabaseClient : NSObject
-
-+ (instancetype)new __attribute__((unavailable("new not available")));
-- (instancetype)init __attribute__((unavailable("init not available")));
-
-+ (instancetype)sharedInstance;
-
-- (void)setTVDBAPIKey:(NSString *)tvdbAPIKey mdbAPIKey:(NSString *)mdbAPIKey;
-- (BOOL)configureWithFileAtPath:(NSString *)path error:(NSError **)error;
-- (void)searchWithFilename:(NSString *)filename completionBlock:(void (^)(NSDictionary *media))completionBlock;
-
-@end
+NSString *const ISMediaKitFailureReasonErrorKey = @"ISMediaKikFailureReasonErrorKey";

@@ -1,14 +1,34 @@
 //
-//  ISMediaKitTests.m
-//  ISMediaKitTests
+// Copyright (c) 2013-2014 InSeven Limited.
 //
-//  Created by Jason Barrie Morley on 04/12/2014.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 //
 
 #import <Cocoa/Cocoa.h>
 #import <XCTest/XCTest.h>
 #import <ISMediaKit/ISMediaKit.h>
+
+NSInteger ISYearFromDate(NSDate *date)
+{
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitYear fromDate:date];
+    return [components year];
+}
 
 @interface ISMediaKitTests : XCTestCase
 
@@ -57,8 +77,13 @@
     [super setUp];
     self.client = [ISMKDatabaseClient sharedInstance];
     XCTAssertNotNil(self.client, @"Unable to get the shared client instance");
-    // TODO This currently shares the configuration file with add-to-itunes and needs to be changed.
-    [self configureDatabaseClient:@"~/.add-to-itunes.plist"];
+    
+    NSString *configurationPath = [@"~/.add-to-itunes.plist" stringByExpandingTildeInPath];
+    NSError *error = nil;
+    BOOL success = [self.client configureWithFileAtPath:configurationPath error:&error];
+    
+    XCTAssert(success);
+    
 }
 
 - (void)tearDown
@@ -141,6 +166,14 @@
     NSDictionary *media = [self searchForFilename:@"Ladyhawke.m4v"];
     XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
     XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"Ladyhawke");
+}
+
+- (void)testNewRoboCop
+{
+    NSDictionary *media = [self searchForFilename:@"Robocop.m4v"];
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
+    XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"RoboCop");
+    XCTAssertEqual(ISYearFromDate(media[ISMKKeyMovieDate]), 2014);
 }
 
 @end

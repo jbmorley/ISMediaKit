@@ -24,3 +24,16 @@
 
 #import "ISMKTypes.h"
 #import "ISMKDatabaseClient.h"
+
+extern NSString *const ISMediaKitErrorDomain;
+
+typedef NS_ENUM(NSUInteger, ISMediaKitErrorCode) {
+    
+    ISMediaKitErrorFileNotFound,
+    
+    ISMediaKitErrorInvalidConfigurationFile,
+    
+    ISMediaKitErrorMissingKey,
+};
+
+extern NSString *const ISMediaKitFailureReasonErrorKey;
