@@ -91,11 +91,6 @@ Changelog
 
 - Initial release.
 
-License
--------
-
-ISMediaKit is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
-
 Thanks
 ------
 
@@ -103,3 +98,8 @@ Many thanks to:
 
 - [Gustavo Leguizamon](https://github.com/goopi) for [ILMovieDB](https://github.com/WatchApp/ILMovieDB)
 - [Kevin Tuhumury](https://github.com/kevintuhumury) for [iTVDb](https://github.com/kevintuhumury/itvdb)
+
+License
+-------
+
+ISMediaKit is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
