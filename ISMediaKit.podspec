@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "ISMediaKit"
-  s.version      = "0.0.1"
+  s.version      = "1.0.0"
   s.summary      = "Utilities for managing media"
   s.homepage     = "https://github.com/jbmorley/ISMediaKit"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
