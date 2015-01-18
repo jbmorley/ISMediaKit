@@ -16,6 +16,11 @@ platform :osx, '10.9'
 pod 'ISMediaKit', '~> 1.0'
 ```
 
+Documentation
+-------------
+
+Documentation is available on [CocoaDocs](http://cocoadocs.org/docsets/ISMediaKit/).
+
 Classes
 -------
 
