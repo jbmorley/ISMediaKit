@@ -5,6 +5,17 @@ Utilities for managing media.
 
 [![Build Status](https://travis-ci.org/jbmorley/ISMediaKit.svg)](https://travis-ci.org/jbmorley/ISMediaKit)
 
+Installation
+------------
+
+ISMediaKit is available through [CocoaPods](http://cocoapods.org/):
+
+```
+source 'https://github.com/CocoaPods/Specs.git'
+platform :osx, '10.9'
+pod 'ISMediaKit', '~> 1.0'
+```
+
 Classes
 -------
 
