@@ -87,9 +87,13 @@ This will output:
 Changelog
 ---------
 
+### Version 1.0.1
+
+- Support for shows of the format `show.title.123.ext` and `show.title.1221.ext`
+
 ### Version 1.0.0
 
-- Initial release.
+- Initial release
 
 Thanks
 ------
