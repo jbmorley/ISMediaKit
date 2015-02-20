@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
 
   s.name         = "ISMediaKit"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "Utilities for managing media"
   s.homepage     = "https://github.com/jbmorley/ISMediaKit"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { "Jason Barrie Morley" => "jason.morley@inseven.co.uk" }
-  s.source       = { :git => "https://github.com/jbmorley/ISMediaKit.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/jbmorley/ISMediaKit.git", :tag => "1.0.1" }
 
   s.ios.deployment_target = '7.0'
   s.osx.deployment_target = '10.9'
