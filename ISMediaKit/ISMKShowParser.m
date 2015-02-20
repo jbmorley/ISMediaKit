@@ -22,17 +22,19 @@
 
 #import "ISMKShowParser.h"
 
-@interface ISMKShowParser () {
-    NSString *_show;
-    NSNumber *_season;
-    NSNumber *_episode;
-}
+@interface ISMKShowParser ()
+
+@property (nonatomic, readwrite, copy) NSString *show;
+@property (nonatomic, readwrite, copy) NSNumber *season;
+@property (nonatomic, readwrite, copy) NSNumber *episode;
 
 @property (nonatomic, strong) NSRegularExpression *regex;
+@property (nonatomic, strong) NSRegularExpression *regexConcise;
 
 @end
 
 static NSString *ShowPattern = @"^(.+)\\.s(\\d{2})e(\\d{2})";
+static NSString *ShowPatternConcise = @"^(.+)\\.(\\d{1,2}?)(\\d{1,2})(\\..+)?$";
 
 @implementation ISMKShowParser
 
@@ -43,6 +45,9 @@ static NSString *ShowPattern = @"^(.+)\\.s(\\d{2})e(\\d{2})";
         self.regex = [NSRegularExpression regularExpressionWithPattern:ShowPattern
                                                                options:NSRegularExpressionCaseInsensitive
                                                                  error:nil];
+        self.regexConcise = [NSRegularExpression regularExpressionWithPattern:ShowPatternConcise
+                                                                      options:NSRegularExpressionCaseInsensitive
+                                                                        error:nil];
     }
     return self;
 }
@@ -50,29 +55,53 @@ static NSString *ShowPattern = @"^(.+)\\.s(\\d{2})e(\\d{2})";
 
 - (BOOL)parse:(NSString *)string
 {
-    if ([self.regex numberOfMatchesInString:string options:0 range:NSMakeRange(0, string.length)] > 0) {
+    NSRange range = NSMakeRange(0, string.length);
+    if ([self.regex numberOfMatchesInString:string options:0 range:range] > 0) {
         
-        NSTextCheckingResult *textCheckingResult = [self.regex firstMatchInString:string options:0
-                                                                            range:NSMakeRange(0, string.length)];
+        NSTextCheckingResult *textCheckingResult = [self.regex firstMatchInString:string options:0 range:range];
         NSRange matchRange;
         NSString *match;
         
         // Show.
         matchRange = [textCheckingResult rangeAtIndex:1];
-        _show = [string substringWithRange:matchRange];
+        self.show = [string substringWithRange:matchRange];
         
         // Season.
         matchRange = [textCheckingResult rangeAtIndex:2];
         match = [string substringWithRange:matchRange];
-        _season = [NSNumber numberWithInteger:[match integerValue]];
+        self.season = [NSNumber numberWithInteger:[match integerValue]];
         
         // Episode.
         matchRange = [textCheckingResult rangeAtIndex:3];
         match = [string substringWithRange:matchRange];
-        _episode = [NSNumber numberWithInteger:[match integerValue]];
+        self.episode = [NSNumber numberWithInteger:[match integerValue]];
         
         return YES;
+        
+    } else if ([self.regexConcise numberOfMatchesInString:string options:0 range:range] > 0) {
+        
+        NSTextCheckingResult *textCheckingResult = [self.regexConcise firstMatchInString:string options:0 range:range];
+        NSRange matchRange;
+        NSString *match;
+        
+        // Show.
+        matchRange = [textCheckingResult rangeAtIndex:1];
+        self.show = [string substringWithRange:matchRange];
+        
+        // Season.
+        matchRange = [textCheckingResult rangeAtIndex:2];
+        match = [string substringWithRange:matchRange];
+        self.season = [NSNumber numberWithInteger:[match integerValue]];
+        
+        // Episode.
+        matchRange = [textCheckingResult rangeAtIndex:3];
+        match = [string substringWithRange:matchRange];
+        self.episode = [NSNumber numberWithInteger:[match integerValue]];
+        
+        return YES;
+        
     }
+    
     return NO;
 }
 

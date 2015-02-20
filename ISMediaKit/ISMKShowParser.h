@@ -24,9 +24,9 @@
 
 @interface ISMKShowParser : NSObject
 
-@property (nonatomic, readonly) NSString *show;
-@property (nonatomic, readonly) NSNumber *season;
-@property (nonatomic, readonly) NSNumber *episode;
+@property (nonatomic, readonly, copy) NSString *show;
+@property (nonatomic, readonly, copy) NSNumber *season;
+@property (nonatomic, readonly, copy) NSNumber *episode;
 
 - (BOOL)parse:(NSString *)string;
 

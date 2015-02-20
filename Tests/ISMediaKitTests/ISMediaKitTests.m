@@ -71,6 +71,21 @@ NSInteger ISYearFromDate(NSDate *date)
     return result;
 }
 
+- (void)checkShowWithFilename:(NSString *)filename
+                         show:(NSString *)show
+                        title:(NSString *)title
+                       season:(NSNumber *)season
+                      episode:(NSNumber *)episode
+{
+    NSDictionary *media = [self searchForFilename:filename];
+    XCTAssertNotNil(media);
+    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
+    XCTAssertEqualObjects(media[ISMKKeyShowTitle], show);
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], title);
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], season);
+    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], episode);
+}
+
 - (void)testFailedSearchReturnsNil
 {
     NSDictionary *media = [self searchForFilename:@"a.show.that.should.never.exist.s03e01.m4v"];
@@ -79,46 +94,77 @@ NSInteger ISYearFromDate(NSDate *date)
 
 - (void)testArrowS01E01
 {
-    NSDictionary *media = [self searchForFilename:@"arrow.s01e01.m4v"];
-    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
-    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Arrow");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"Pilot");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @1);
+    [self checkShowWithFilename:@"arrow.s01e01.m4v"
+                           show:@"Arrow"
+                          title:@"Pilot"
+                         season:@1
+                        episode:@1];
 }
 
 - (void)testJeevesAndWooster
 {
-    NSDictionary *media = nil;
+    [self checkShowWithFilename:@"jeeves.&.wooster.s01e03.m4v"
+                           show:@"Jeeves and Wooster"
+                          title:@"The Purity of the Turf"
+                         season:@1
+                        episode:@3];
     
-    media = [self searchForFilename:@"jeeves.&.wooster.s01e03.m4v"];
-    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
-    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
-    
-    media = [self searchForFilename:@"jeeves.and.wooster.s01e03.m4v"];
-    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
-    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Jeeves and Wooster");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"The Purity of the Turf");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @1);
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @3);
+    [self checkShowWithFilename:@"jeeves.and.wooster.s01e03.m4v"
+                           show:@"Jeeves and Wooster"
+                          title:@"The Purity of the Turf"
+                         season:@1
+                        episode:@3];
 }
 
 - (void)testMarvelsAgentsOfSHIELD
 {
-    NSDictionary *media = [self searchForFilename:@"marvels.agents.of.s.h.i.e.l.d.s02e09.mp4"];
-    XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeShow));
-    XCTAssertEqualObjects(media[ISMKKeyShowTitle], @"Marvel's Agents of S.H.I.E.L.D.");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeTitle], @"...Ye Who Enter Here");
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeSeason], @2);
-    XCTAssertEqualObjects(media[ISMKKeyEpisodeNumber], @9);
+    [self checkShowWithFilename:@"marvels.agents.of.s.h.i.e.l.d.s02e09.mp4"
+                           show:@"Marvel's Agents of S.H.I.E.L.D."
+                          title:@"...Ye Who Enter Here"
+                         season:@2
+                        episode:@9];
+}
+
+- (void)testElementaryConciseFormat
+{
+    [self checkShowWithFilename:@"elementary.315.noise.mp4"
+                           show:@"Elementary"
+                          title:@"When Your Number's Up"
+                         season:@3
+                        episode:@15];
+}
+
+- (void)testElementaryConciseFormatShort
+{
+    [self checkShowWithFilename:@"elementary.315.mp4"
+                           show:@"Elementary"
+                          title:@"When Your Number's Up"
+                         season:@3
+                        episode:@15];
+}
+
+- (void)testNCISConciseFormat
+{
+    [self checkShowWithFilename:@"ncis.1215.random.mp4"
+                           show:@"NCIS"
+                          title:@"Cabin Fever"
+                         season:@12
+                        episode:@15];
+}
+
+- (void)testNCISConciseFormatShort
+{
+    [self checkShowWithFilename:@"ncis.1215.mp4"
+                           show:@"NCIS"
+                          title:@"Cabin Fever"
+                         season:@12
+                        episode:@15];
 }
 
 - (void)testBackToTheFuture
 {
     NSDictionary *media = [self searchForFilename:@"Back to the Future.m4v"];
+    XCTAssertNotNil(media);
     XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
     XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"Back to the Future");
 }
@@ -132,6 +178,7 @@ NSInteger ISYearFromDate(NSDate *date)
 - (void)testLadyHawke
 {
     NSDictionary *media = [self searchForFilename:@"Ladyhawke.m4v"];
+    XCTAssertNotNil(media);
     XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
     XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"Ladyhawke");
 }
@@ -148,6 +195,7 @@ NSInteger ISYearFromDate(NSDate *date)
 - (void)testOriginalRoboCop
 {
     NSDictionary *media = [self searchForFilename:@"Robocop 1987.m4v"];
+    XCTAssertNotNil(media);
     XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
     XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"RoboCop");
     XCTAssertEqual(ISYearFromDate(media[ISMKKeyMovieDate]), 1987);
@@ -156,6 +204,7 @@ NSInteger ISYearFromDate(NSDate *date)
 - (void)testOriginalRoboCopParentheses
 {
     NSDictionary *media = [self searchForFilename:@"Robocop (1987).m4v"];
+    XCTAssertNotNil(media);
     XCTAssertEqualObjects(media[ISMKKeyType], @(ISMKTypeMovie));
     XCTAssertEqualObjects(media[ISMKKeyMovieTitle], @"RoboCop");
     XCTAssertEqual(ISYearFromDate(media[ISMKKeyMovieDate]), 1987);
