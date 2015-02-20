@@ -262,7 +262,7 @@
                   completionBlock:completionBlock];
         } else {
             name = [ISMKDatabaseClient titleForFilenameFormatedTitle:name];
-
+            
             NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(.+?)( ((\\d{4})|\\((\\d{4})\\)))?$"
                                                                                    options:NSRegularExpressionCaseInsensitive
                                                                                      error:nil];
@@ -297,7 +297,7 @@
                 [self metaDataForMovie:title
                            releaseYear:releaseYear
                        completionBlock:completionBlock];
-
+                
             } else {
                 
                 dispatch_async(self.completionQueue, ^{
@@ -371,7 +371,7 @@
             dispatch_async(self.completionQueue, ^{
                 completionBlock(results);
             });
-
+            
             
         }];
         
@@ -514,7 +514,7 @@
         }
         
         self.fetchingMovieConfiguration = YES;
-
+        
         // Fetch the configuration.
         [self.mdbClient GET:kILMovieDBConfiguration parameters:nil block:^(id responseObject, NSError *error) {
             dispatch_async(self.workerQueue, ^{
@@ -522,7 +522,7 @@
                 if (error == nil && responseObject) {
                     self.movieConfiguration = responseObject;
                 }
-
+                
                 // Call any pending completion blocks.
                 // N.B. This will complete all blocks with nil in the case of failure.
                 for (void (^completionBlock)(id) in self.movieConfigurationCompletionBlocks) {
@@ -550,7 +550,7 @@
         if (self == nil) {
             return;
         }
-
+        
         __weak ISMKDatabaseClient *weakSelf = self;
         [self.mdbClient GET:kILMovieDBSearchMovie parameters:@{@"query": movie} block:^(id responseObject,
                                                                                         NSError *error) {
@@ -576,7 +576,7 @@
                 if (results && results.count > 0) {
                     
                     // Check the release year if one has been specified.
-
+                    
                     if (releaseYear == ISMediaKitUnknown) {
                         
                         result = results[0];
@@ -603,7 +603,7 @@
                         }
                         
                     }
-                
+                    
                 }
             }
             
